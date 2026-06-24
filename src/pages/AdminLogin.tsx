@@ -1,8 +1,5 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Icon from '@/components/ui/icon';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import func2url from '../../backend/func2url.json';
 
 const AdminLogin = () => {
@@ -25,7 +22,7 @@ const AdminLogin = () => {
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error || 'Ошибка входа');
+        setError(data.error || 'Неверный логин или пароль');
         return;
       }
       localStorage.setItem('qonaq_admin_token', data.token);
@@ -38,83 +35,161 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-4 text-foreground">
-      <div aria-hidden="true" style={{ pointerEvents: 'none', position: 'fixed', inset: 0, overflow: 'hidden', zIndex: 0 }}>
-        <div className="animate-blob absolute -top-32 -left-24 h-[28rem] w-[28rem] rounded-full bg-gold/20 blur-3xl" />
-        <div className="animate-blob absolute -bottom-32 -right-24 h-[32rem] w-[32rem] rounded-full bg-primary/15 blur-3xl" style={{ animationDelay: '5s' }} />
+    <div style={{
+      minHeight: '100vh',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      background: 'linear-gradient(135deg, #fdf8f0 0%, #fef9ee 50%, #fdf5e8 100%)',
+      padding: '1rem',
+      fontFamily: "'Golos Text', sans-serif",
+    }}>
+      {/* Decorative blobs — non-interactive */}
+      <div style={{ position: 'fixed', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 0 }}>
+        <div style={{ position: 'absolute', top: '-8rem', left: '-6rem', width: '28rem', height: '28rem', borderRadius: '9999px', background: 'rgba(200,160,80,0.18)', filter: 'blur(80px)' }} />
+        <div style={{ position: 'absolute', bottom: '-8rem', right: '-6rem', width: '32rem', height: '32rem', borderRadius: '9999px', background: 'rgba(180,130,60,0.12)', filter: 'blur(80px)' }} />
       </div>
 
-      <div className="relative z-10 w-full max-w-md animate-fade-in" style={{ animationDuration: '0.6s' }}>
-        <a href="/" className="mb-8 flex items-center justify-center gap-2">
-          <div className="gold-gradient flex h-10 w-10 items-center justify-center rounded-xl shadow-md">
-            <Icon name="Mail" size={20} className="text-white" />
+      <div style={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: '420px' }}>
+
+        {/* Logo */}
+        <a href="/" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', marginBottom: '2rem', textDecoration: 'none' }}>
+          <div style={{ width: '42px', height: '42px', borderRadius: '12px', background: 'linear-gradient(135deg, #c8922a, #e8b84b, #a8761e)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 16px rgba(200,146,42,0.4)' }}>
+            <span style={{ fontSize: '20px' }}>✉️</span>
           </div>
-          <span className="font-display text-3xl font-bold tracking-tight">Qonaq<span className="text-gold"> Invite</span></span>
+          <span style={{ fontFamily: "'Cormorant', serif", fontSize: '28px', fontWeight: 700, color: '#1a1208' }}>
+            Qonaq<span style={{ color: '#c8922a' }}> Invite</span>
+          </span>
         </a>
 
-        <div className="glass rounded-3xl p-8 shadow-2xl sm:p-10">
-          <div className="mb-7 text-center">
-            <div className="gold-gradient mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl shadow-lg">
-              <Icon name="ShieldCheck" size={26} className="text-white" />
+        {/* Card */}
+        <div style={{
+          background: 'rgba(255,252,245,0.75)',
+          backdropFilter: 'blur(24px)',
+          WebkitBackdropFilter: 'blur(24px)',
+          borderRadius: '28px',
+          padding: '2.5rem',
+          boxShadow: '0 8px 48px rgba(160,110,30,0.12), 0 1px 0 rgba(255,255,255,0.9) inset',
+          border: '1px solid rgba(200,160,80,0.2)',
+        }}>
+          {/* Header */}
+          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+            <div style={{ width: '56px', height: '56px', borderRadius: '18px', background: 'linear-gradient(135deg, #c8922a, #e8b84b)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem', boxShadow: '0 6px 20px rgba(200,146,42,0.35)', fontSize: '26px' }}>
+              🛡️
             </div>
-            <h1 className="font-display text-3xl font-bold">Вход для администратора</h1>
-            <p className="mt-2 text-sm text-muted-foreground">Доступ к панели управления приглашениями</p>
+            <h1 style={{ fontFamily: "'Cormorant', serif", fontSize: '28px', fontWeight: 700, color: '#1a1208', margin: 0 }}>Вход для администратора</h1>
+            <p style={{ color: '#8a7a60', fontSize: '14px', marginTop: '6px' }}>Доступ только для владельца</p>
           </div>
 
-          <form onSubmit={submit} className="space-y-4">
-            <div>
-              <label className="mb-1.5 block text-sm font-medium">Логин</label>
-              <div className="relative">
-                <Icon name="User" size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  value={login}
-                  onChange={(e) => setLogin(e.target.value)}
-                  placeholder="admin"
-                  autoComplete="username"
-                  className="h-12 rounded-xl pl-9"
-                  required
-                />
-              </div>
+          <form onSubmit={submit}>
+            {/* Login field */}
+            <div style={{ marginBottom: '1rem' }}>
+              <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#3a2e1e', marginBottom: '6px' }}>Логин</label>
+              <input
+                type="text"
+                value={login}
+                onChange={(e) => setLogin(e.target.value)}
+                placeholder="Введите логин"
+                autoComplete="username"
+                required
+                style={{
+                  width: '100%',
+                  height: '48px',
+                  borderRadius: '14px',
+                  border: '1.5px solid rgba(200,160,80,0.35)',
+                  background: 'rgba(255,250,240,0.9)',
+                  padding: '0 16px',
+                  fontSize: '15px',
+                  color: '#1a1208',
+                  outline: 'none',
+                  boxSizing: 'border-box',
+                  transition: 'border-color 0.2s',
+                }}
+                onFocus={(e) => e.target.style.borderColor = '#c8922a'}
+                onBlur={(e) => e.target.style.borderColor = 'rgba(200,160,80,0.35)'}
+              />
             </div>
 
-            <div>
-              <label className="mb-1.5 block text-sm font-medium">Пароль</label>
-              <div className="relative">
-                <Icon name="Lock" size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                <Input
+            {/* Password field */}
+            <div style={{ marginBottom: '1.5rem' }}>
+              <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#3a2e1e', marginBottom: '6px' }}>Пароль</label>
+              <div style={{ position: 'relative' }}>
+                <input
                   type={show ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
+                  placeholder="Введите пароль"
                   autoComplete="current-password"
-                  className="h-12 rounded-xl px-9"
                   required
+                  style={{
+                    width: '100%',
+                    height: '48px',
+                    borderRadius: '14px',
+                    border: '1.5px solid rgba(200,160,80,0.35)',
+                    background: 'rgba(255,250,240,0.9)',
+                    padding: '0 48px 0 16px',
+                    fontSize: '15px',
+                    color: '#1a1208',
+                    outline: 'none',
+                    boxSizing: 'border-box',
+                    transition: 'border-color 0.2s',
+                  }}
+                  onFocus={(e) => e.target.style.borderColor = '#c8922a'}
+                  onBlur={(e) => e.target.style.borderColor = 'rgba(200,160,80,0.35)'}
                 />
-                <button type="button" onClick={() => setShow(!show)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition hover:text-foreground">
-                  <Icon name={show ? 'EyeOff' : 'Eye'} size={16} />
+                <button
+                  type="button"
+                  onClick={() => setShow(!show)}
+                  style={{ position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '18px', padding: 0, lineHeight: 1 }}
+                >
+                  {show ? '🙈' : '👁️'}
                 </button>
               </div>
             </div>
 
+            {/* Error */}
             {error && (
-              <div className="flex items-center gap-2 rounded-xl bg-destructive/10 px-4 py-3 text-sm text-destructive">
-                <Icon name="CircleAlert" size={16} />
-                {error}
+              <div style={{ background: 'rgba(220,60,60,0.08)', border: '1px solid rgba(220,60,60,0.2)', borderRadius: '12px', padding: '10px 14px', marginBottom: '1rem', color: '#c03030', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                ⚠️ {error}
               </div>
             )}
 
-            <Button type="submit" disabled={loading} className="gold-gradient h-12 w-full rounded-xl text-base font-semibold text-white shadow-lg shadow-gold/30 transition hover:scale-[1.02]">
-              {loading ? <Icon name="Loader2" size={18} className="animate-spin" /> : <><Icon name="LogIn" size={18} className="mr-1" /> Войти</>}
-            </Button>
+            {/* Submit button */}
+            <button
+              type="submit"
+              disabled={loading}
+              style={{
+                width: '100%',
+                height: '52px',
+                borderRadius: '16px',
+                border: 'none',
+                background: loading ? '#d4a94a' : 'linear-gradient(135deg, #c8922a, #e8b84b, #a8761e)',
+                color: '#fff',
+                fontSize: '16px',
+                fontWeight: 700,
+                cursor: loading ? 'not-allowed' : 'pointer',
+                boxShadow: '0 6px 24px rgba(200,146,42,0.4)',
+                transition: 'transform 0.15s, box-shadow 0.15s',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                fontFamily: "'Golos Text', sans-serif",
+              }}
+              onMouseEnter={(e) => { if (!loading) { (e.currentTarget as HTMLButtonElement).style.transform = 'scale(1.02)'; } }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.transform = 'scale(1)'; }}
+            >
+              {loading ? '⏳ Входим...' : '🔐 Войти в панель'}
+            </button>
           </form>
 
-          <p className="mt-6 flex items-center justify-center gap-1.5 text-xs text-muted-foreground">
-            <Icon name="Lock" size={12} /> Регистрация закрыта. Доступ только для владельца.
+          <p style={{ textAlign: 'center', fontSize: '12px', color: '#a09080', marginTop: '1.5rem' }}>
+            🔒 Регистрация закрыта. Только для владельца.
           </p>
         </div>
 
-        <a href="/" className="mt-6 flex items-center justify-center gap-1.5 text-sm text-muted-foreground transition hover:text-foreground">
-          <Icon name="ArrowLeft" size={14} /> На главную
+        <a href="/" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginTop: '1.5rem', color: '#a09080', fontSize: '14px', textDecoration: 'none' }}>
+          ← На главную
         </a>
       </div>
     </div>
