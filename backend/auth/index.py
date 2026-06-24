@@ -47,19 +47,20 @@ def handler(event: dict, context) -> dict:
     if method == 'OPTIONS':
         return {'statusCode': 200, 'headers': cors, 'body': ''}
 
-    admin_login = os.environ.get('ADMIN_LOGIN', '') or 'audanbayev'
-    admin_password = os.environ.get('ADMIN_PASSWORD', '') or 'Taraz2026'
-    jwt_secret = os.environ.get('JWT_SECRET', '') or 'qonaq2026_jwt_secret_key_x9f3v1b8'
+    admin_login = (os.environ.get('ADMIN_LOGIN') or 'audanbayev').strip()
+    admin_password = (os.environ.get('ADMIN_PASSWORD') or 'Taraz2026').strip()
+    jwt_secret = (os.environ.get('JWT_SECRET') or 'qonaq2026_jwt_secret_key_x9f3v1b8').strip()
     headers = {**cors, 'Content-Type': 'application/json'}
 
     if method == 'POST':
         body = json.loads(event.get('body') or '{}')
         login = str(body.get('login', '')).strip()
-        password = str(body.get('password', ''))
+        password = str(body.get('password', '')).strip()
 
-        ok = (hmac.compare_digest(login, admin_login)
-              and hmac.compare_digest(password, admin_password))
-        if not ok:
+        print(f"[AUTH] login='{login}' expected='{admin_login}' match={login == admin_login}")
+        print(f"[AUTH] pass match={password == admin_password}")
+
+        if login != admin_login or password != admin_password:
             return {'statusCode': 401, 'headers': headers,
                     'body': json.dumps({'error': 'Неверный логин или пароль'})}
 
