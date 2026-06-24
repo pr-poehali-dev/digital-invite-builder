@@ -99,11 +99,17 @@
 @layer base {
   * {
     @apply border-border;
+    pointer-events: auto;
   }
 
   body {
     @apply bg-background text-foreground;
     font-family: "Golos Text", sans-serif;
+    position: relative;
+  }
+
+  [aria-hidden="true"] {
+    pointer-events: none !important;
   }
 }
 

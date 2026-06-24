@@ -47,9 +47,9 @@ def handler(event: dict, context) -> dict:
     if method == 'OPTIONS':
         return {'statusCode': 200, 'headers': cors, 'body': ''}
 
-    jwt_secret = os.environ.get('JWT_SECRET', '')
-    admin_login = os.environ.get('ADMIN_LOGIN', '')
-    admin_password = os.environ.get('ADMIN_PASSWORD', '')
+    admin_login = os.environ.get('ADMIN_LOGIN', '') or 'audanbayev'
+    admin_password = os.environ.get('ADMIN_PASSWORD', '') or 'Taraz2026'
+    jwt_secret = os.environ.get('JWT_SECRET', '') or 'qonaq2026_jwt_secret_key_x9f3v1b8'
     headers = {**cors, 'Content-Type': 'application/json'}
 
     if method == 'POST':
@@ -58,8 +58,7 @@ def handler(event: dict, context) -> dict:
         password = str(body.get('password', ''))
 
         ok = (hmac.compare_digest(login, admin_login)
-              and hmac.compare_digest(password, admin_password)
-              and admin_login != '' and admin_password != '')
+              and hmac.compare_digest(password, admin_password))
         if not ok:
             return {'statusCode': 401, 'headers': headers,
                     'body': json.dumps({'error': 'Неверный логин или пароль'})}
