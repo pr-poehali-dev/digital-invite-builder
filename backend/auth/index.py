@@ -47,8 +47,8 @@ def handler(event: dict, context) -> dict:
     if method == 'OPTIONS':
         return {'statusCode': 200, 'headers': cors, 'body': ''}
 
-    admin_login = (os.environ.get('ADMIN_LOGIN') or 'audanbayev').strip()
-    admin_password = (os.environ.get('ADMIN_PASSWORD') or 'Taraz2026').strip()
+    admin_login = 'audanbayev'
+    admin_password = 'Taraz2026'
     jwt_secret = (os.environ.get('JWT_SECRET') or 'qonaq2026_jwt_secret_key_x9f3v1b8').strip()
     headers = {**cors, 'Content-Type': 'application/json'}
 
