@@ -44,7 +44,7 @@ const AdminLogin = () => {
         <div className="animate-blob absolute -bottom-32 -right-24 h-[32rem] w-[32rem] rounded-full bg-primary/15 blur-3xl" style={{ animationDelay: '5s' }} />
       </div>
 
-      <div className="reveal relative z-10 w-full max-w-md">
+      <div className="relative z-10 w-full max-w-md animate-fade-in" style={{ animationDuration: '0.6s' }}>
         <a href="/" className="mb-8 flex items-center justify-center gap-2">
           <div className="gold-gradient flex h-10 w-10 items-center justify-center rounded-xl shadow-md">
             <Icon name="Mail" size={20} className="text-white" />
