@@ -39,7 +39,7 @@ const AdminLogin = () => {
 
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-4 text-foreground">
-      <div className="pointer-events-none fixed inset-0 overflow-hidden">
+      <div aria-hidden="true" style={{ pointerEvents: 'none', position: 'fixed', inset: 0, overflow: 'hidden', zIndex: 0 }}>
         <div className="animate-blob absolute -top-32 -left-24 h-[28rem] w-[28rem] rounded-full bg-gold/20 blur-3xl" />
         <div className="animate-blob absolute -bottom-32 -right-24 h-[32rem] w-[32rem] rounded-full bg-primary/15 blur-3xl" style={{ animationDelay: '5s' }} />
       </div>

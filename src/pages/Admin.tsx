@@ -49,7 +49,7 @@ const Admin = () => {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-background text-foreground">
-      <div className="pointer-events-none fixed inset-0 overflow-hidden">
+      <div aria-hidden="true" style={{ pointerEvents: 'none', position: 'fixed', inset: 0, overflow: 'hidden', zIndex: 0 }}>
         <div className="animate-blob absolute -top-32 -right-24 h-[28rem] w-[28rem] rounded-full bg-gold/15 blur-3xl" />
       </div>
 
